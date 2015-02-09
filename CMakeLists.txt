@@ -32,12 +32,24 @@ ENDFOREACH(Package)
 
 #Set any libraries that your project depends on.
 #examples: ITKCommon, VTKRendering, etc
+
+if("${VTK_VERSION}" VERSION_LESS 6)
 SET(Libraries
   vtkFiltering
   vtkGraphics
   vtkImaging
-  vtkIO
 )
+else()
+SET(Libraries
+  vtkFiltersCore
+  vtkIOImage
+  vtkIOXML
+  vtkImagingHybrid
+  vtkFiltersGeneral
+  vtkFiltersGeometry
+)
+endif()
+
 
 #the following block of code is an example of how to build an executable in
 #cmake.  Unmodified, it will add an executable called "MyExe" to the project.

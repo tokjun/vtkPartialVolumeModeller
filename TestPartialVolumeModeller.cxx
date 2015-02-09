@@ -102,7 +102,12 @@ int main(int argc, char* argv[])
 
   vtkXMLUnstructuredGridWriter *gridWriter = vtkXMLUnstructuredGridWriter::New();
   gridWriter->SetFileName("TetrahedralGrid.vtu");
+#if (VTK_MAJOR_VERSION <= 5)
   gridWriter->SetInput(grid);
+#else
+  gridWriter->SetInputDataObject( grid );
+#endif
+
   gridWriter->Write();
 
   // Set up partial volume modeller to create an image larger than the
@@ -129,7 +134,11 @@ int main(int argc, char* argv[])
   vtkPartialVolumeModeller *partialVolumeModeller = vtkPartialVolumeModeller::New();
   partialVolumeModeller->SetModelBounds(xmin, xmax, ymin, ymax, zmin, zmax);
   partialVolumeModeller->SetSampleDimensions(imageDimsX, imageDimsY, imageDimsZ);
+#if (VTK_MAJOR_VERSION <= 5)
   partialVolumeModeller->SetInput(grid);
+#else
+  partialVolumeModeller->SetInputDataObject(grid);
+#endif
   partialVolumeModeller->AddObserver(vtkCommand::ProgressEvent, pobserver);
   partialVolumeModeller->Update();
   pobserver->Delete();
@@ -178,7 +187,11 @@ int main(int argc, char* argv[])
   voxelModeller->SetModelBounds(xmin, xmax, ymin, ymax, zmin, zmax);
   voxelModeller->SetSampleDimensions(imageDimsX, imageDimsY, imageDimsZ);
   voxelModeller->SetScalarTypeToFloat();
+#if (VTK_MAJOR_VERSION <= 5)
   voxelModeller->SetInput(grid);
+#else
+  voxelModeller->SetInputDataObject(grid);
+#endif
   voxelModeller->Update();
 
   imageWriter->SetFileName("VoxelModellerImageData.vti");

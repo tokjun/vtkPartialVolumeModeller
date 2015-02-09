@@ -12,6 +12,7 @@
      PURPOSE.  See the above copyright notice for more information.
 
 =========================================================================*/
+
 #include "vtkPartialVolumeModeller.h"
 
 #include "vtkBoxClipDataSet.h"
@@ -66,7 +67,13 @@ vtkPartialVolumeModeller::vtkPartialVolumeModeller()
 
   this->Threader        = vtkMultiThreader::New();
   this->NumberOfThreads = this->Threader->GetNumberOfThreads();
+
+#if (VTK_MAJOR_VERSION <= 5)
   this->ProgressMutex = vtkSimpleCriticalSection::New();
+#else
+  this->ProgressMutex = vtkCriticalSection::New();
+#endif
+
 }
 
 //----------------------------------------------------------------------------

@@ -26,9 +26,14 @@
 #define __vtkPartialVolumeModeller_h
 
 #include "vtkImageAlgorithm.h"
+#include "vtkVersion.h"
 
 class vtkMultiThreader;
+#if (VTK_MAJOR_VERSION <= 5)
 class vtkSimpleCriticalSection;
+#else
+class vtkCriticalSection;
+#endif
 
 class VTK_ABI_EXPORT vtkPartialVolumeModeller : public vtkImageAlgorithm
 {
@@ -114,7 +119,12 @@ protected:
 
   vtkMultiThreader         *Threader;
   int                       NumberOfThreads;
+
+#if (VTK_MAJOR_VERSION <= 5)
   vtkSimpleCriticalSection *ProgressMutex;
+#else
+  vtkCriticalSection *ProgressMutex;
+#endif
 
   int    SampleDimensions[3];
   double MaximumDistance;
